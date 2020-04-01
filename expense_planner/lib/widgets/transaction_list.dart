@@ -10,62 +10,75 @@ class TransactionList extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: 300,
-      child: ListView.builder(
-        itemCount: transactions.length,
-        itemBuilder: (BuildContext context, int index) {
-          return Card(
-            child: Row(
+      child: transactions.length < 1
+          ? Column(
               children: <Widget>[
-                Container(
-                  child: Text(
-                    'Rs ${transactions[index].amount.toStringAsFixed(2)}',
-                    style: TextStyle(
-                      fontSize: 22,
-                      fontWeight: FontWeight.bold,
-                      color: Theme.of(context).primaryColor,
-                    ),
-                  ),
-                  margin: EdgeInsets.symmetric(
-                    horizontal: 10,
-                    vertical: 10,
-                  ),
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Theme.of(context).primaryColor,
-                      width: 2,
-                    ),
-                  ),
-                  padding: EdgeInsets.all(10),
+                Text('Add a new Transaction'),
+                SizedBox(
+                  height: 20,
                 ),
-                Column(
-                  children: <Widget>[
-                    Text(
-                      transactions[index].name,
-                      style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                      ),
-                      textAlign: TextAlign.left,
-                    ),
-                    Text(
-                      DateFormat.jm()
-                          .add_yMMMd()
-                          .format(transactions[index].time),
-                      textAlign: TextAlign.left,
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.blueGrey,
-                      ),
-                    ),
-                  ],
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                Container(
+                  child: Image.asset(
+                    'assets/images/welcome2.png',
+                    fit: BoxFit.cover,
+                  ),
+                  height: 200,
                 ),
               ],
+            )
+          : ListView.builder(
+              itemCount: transactions.length,
+              itemBuilder: (BuildContext context, int index) {
+                return Card(
+                  child: Row(
+                    children: <Widget>[
+                      Container(
+                        child: Text(
+                          'Rs ${transactions[index].amount.toStringAsFixed(2)}',
+                          style: TextStyle(
+                            fontSize: 22,
+                            fontWeight: FontWeight.bold,
+                            color: Theme.of(context).primaryColor,
+                          ),
+                        ),
+                        margin: EdgeInsets.symmetric(
+                          horizontal: 10,
+                          vertical: 10,
+                        ),
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color: Theme.of(context).primaryColor,
+                            width: 2,
+                          ),
+                        ),
+                        padding: EdgeInsets.all(10),
+                      ),
+                      Column(
+                        children: <Widget>[
+                          Text(
+                            transactions[index].name,
+                            style: Theme.of(context).textTheme.title,
+                            textAlign: TextAlign.left,
+                          ),
+                          Text(
+                            DateFormat.jm()
+                                .add_yMMMd()
+                                .format(transactions[index].time),
+                            textAlign: TextAlign.left,
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: Colors.blueGrey,
+                            ),
+                          ),
+                        ],
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                      ),
+                    ],
+                  ),
+                  color: Theme.of(context).cardColor,
+                );
+              },
             ),
-            color: Theme.of(context).cardColor,
-          );
-        },
-      ),
     );
   }
 }
@@ -123,4 +136,8 @@ class TransactionList extends StatelessWidget {
 //         );
 //       }).toList(),
 //       crossAxisAlignment: CrossAxisAlignment.center,
-//     )
+// //     )
+// TextStyle(
+//                         fontSize: 24,
+//                         fontWeight: FontWeight.bold,
+//                       ),

@@ -1,9 +1,11 @@
-import 'package:expense_planner/widgets/new_transaction.dart';
 import 'package:flutter/material.dart';
+import 'dart:math';
+
+import './models/transaction.dart';
+
 import './widgets/chart.dart';
 import './widgets/transaction_list.dart';
-import './models/transaction.dart';
-import 'dart:math';
+import './widgets/new_transaction.dart';
 
 void main() => runApp(MyApp());
 
@@ -16,6 +18,22 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.red,
         accentColor: Colors.blueAccent,
         fontFamily: 'Lato',
+        textTheme: ThemeData.light().textTheme.copyWith(
+              title: TextStyle(
+                fontFamily: 'Comic_Neue',
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+        appBarTheme: AppBarTheme(
+          textTheme: ThemeData.light().textTheme.copyWith(
+                title: TextStyle(
+                  fontFamily: 'Comic_Neue',
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+        ),
       ),
       home: MyHomePage(),
     );
@@ -28,20 +46,17 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final List<Transaction> _userTransactions = [
-    Transaction(
-      id: 'aev',
-      name: 'aevfae',
-      amount: 2421,
-      time: DateTime.now(),
-    ),
-    Transaction(
-      id: 'awegvwegvv',
-      name: 'aaveave',
-      amount: 221,
-      time: DateTime.now(),
-    ),
-  ];
+  final List<Transaction> _userTransactions = [];
+
+  List<Transaction> get _recentTransactions {
+    return _userTransactions.where((tx) {
+      return tx.time.isAfter(
+        DateTime.now().subtract(
+          Duration(days: 7),
+        ),
+      );
+    }).toList();
+  }
 
   void _addNewTransaction(String title, double amount) {
     final newTransaction = Transaction(
@@ -86,7 +101,7 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            Chart(),
+            Chart(_recentTransactions),
             TransactionList(_userTransactions),
           ],
         ),
@@ -129,3 +144,15 @@ class _MyHomePageState extends State<MyHomePage> {
 //       ],
 //     ),
 // import './widgets/user_transaction.dart';
+// Transaction(
+//   id: 'aev',
+//   name: 'aevfae',
+//   amount: 2421,
+//   time: DateTime.now(),
+// ),
+// Transaction(
+//   id: 'awegvwegvv',
+//   name: 'aaveave',
+//   amount: 221,
+//   time: DateTime.now(),
+// ),
