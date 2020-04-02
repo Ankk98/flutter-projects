@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class NewTransaction extends StatefulWidget {
   final Function addNewTransaction;
@@ -13,20 +14,41 @@ class _NewTransactionState extends State<NewTransaction> {
 
   final amountController = TextEditingController();
 
-  void submitData() { 
+  DateTime _selectedDate;
+
+  void submitData() {
     final enteredTitle = titleController.text;
     final enteredAmount = double.parse(amountController.text);
 
-    if(enteredTitle.isEmpty || enteredAmount <= 0){
+    if (enteredTitle.isEmpty || enteredAmount <= 0 || _selectedDate == null) {
       return;
     }
 
     widget.addNewTransaction(
       enteredTitle,
       enteredAmount,
+      _selectedDate,
     );
 
     Navigator.of(context).pop();
+  }
+
+  void _presentDatePicker(BuildContext context) {
+    showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime.now().subtract(
+        Duration(days: 1000),
+      ),
+      lastDate: DateTime.now(),
+    ).then((pickedDate) {
+      if (pickedDate == null) {
+        return;
+      }
+      setState(() {
+        _selectedDate = pickedDate;
+      });
+    });
   }
 
   @override
@@ -52,6 +74,26 @@ class _NewTransactionState extends State<NewTransaction> {
                 decimal: true,
               ),
               onSubmitted: (_) => submitData(),
+            ),
+            Row(
+              children: <Widget>[
+                Text(
+                  _selectedDate == null
+                      ? 'No date choosen:'
+                      : DateFormat.yMd().format(_selectedDate),
+                ),
+                FlatButton(
+                  onPressed: () => _presentDatePicker(context),
+                  child: Text(
+                    'Choose Date',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Theme.of(context).primaryColor,
+                    ),
+                  ),
+                  textColor: Theme.of(context).primaryColor,
+                ),
+              ],
             ),
             RaisedButton(
               onPressed: submitData,
