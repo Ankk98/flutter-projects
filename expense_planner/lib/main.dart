@@ -47,6 +47,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   final List<Transaction> _userTransactions = [];
+  bool _buttonPressed = false;
 
   List<Transaction> get _recentTransactions {
     return _userTransactions.where((tx) {
@@ -72,6 +73,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void _startAddNewTransaction(BuildContext ctx) {
     showModalBottomSheet(
+      isScrollControlled: true,
         context: ctx,
         builder: (_) {
           return GestureDetector(
@@ -82,35 +84,97 @@ class _MyHomePageState extends State<MyHomePage> {
         });
   }
 
-    void _deleteTransaction(int index) {
-      setState(() {
-        _userTransactions.removeAt(index);
-      });
+  void _deleteTransaction(int index) {
+    setState(() {
+      _userTransactions.removeAt(index);
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Expense Planner'),
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(
-              Icons.add,
-            ),
-            onPressed: () => _startAddNewTransaction(context),
+    final mediaQuery = MediaQuery.of(context);
+    final appBar = AppBar(
+      title: Text('Expense Planner'),
+      actions: <Widget>[
+        IconButton(
+          icon: Icon(
+            Icons.add,
           ),
-        ],
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: <Widget>[
-            Chart(_recentTransactions),
-            TransactionList(_userTransactions, _deleteTransaction),
-          ],
+          onPressed: () => _startAddNewTransaction(context),
         ),
+      ],
+    );
+
+    final isLandscape =
+        mediaQuery.orientation == Orientation.landscape;
+
+    return Scaffold(
+      appBar: appBar,
+      body: SingleChildScrollView(
+        child: !isLandscape
+            ? Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: <Widget>[
+                  Container(
+                    child: Chart(_recentTransactions),
+                    height: (mediaQuery.size.height -
+                            appBar.preferredSize.height -
+                            mediaQuery.padding.top) *
+                        0.3,
+                  ),
+                  Container(
+                    child:
+                        TransactionList(_userTransactions, _deleteTransaction),
+                    height: (mediaQuery.size.height -
+                            appBar.preferredSize.height -
+                            mediaQuery.padding.top) *
+                        0.7,
+                  ),
+                ],
+              )
+            : Column(
+                children: <Widget>[
+                  Container(
+                    height: (mediaQuery.size.height -
+                            appBar.preferredSize.height -
+                            mediaQuery.padding.top) *
+                        0.2,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        _buttonPressed
+                            ? Text('Switch to Chart: ')
+                            : Text('Switch to Transactions List: '),
+                        Switch(
+                          value: _buttonPressed,
+                          onChanged: (v) {
+                            setState(() {
+                              _buttonPressed = v;
+                            });
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                  _buttonPressed
+                      ? Container(
+                          child: Chart(_recentTransactions),
+                          height: (mediaQuery.size.height -
+                                  appBar.preferredSize.height -
+                                  mediaQuery.padding.top) *
+                              0.8,
+                        )
+                      : Container(
+                          child: TransactionList(
+                              _userTransactions, _deleteTransaction),
+                          height: (mediaQuery.size.height -
+                                  appBar.preferredSize.height -
+                                  mediaQuery.padding.top) *
+                              0.8,
+                        ),
+                ],
+              ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => _startAddNewTransaction(context),
@@ -162,3 +226,10 @@ class _MyHomePageState extends State<MyHomePage> {
 //   amount: 221,
 //   time: DateTime.now(),
 // ),
+
+  // void _onOrientationChange(bool value) {
+  //   setState(() {
+  //     _buttonPressed = value;
+  //   });
+  // }
+

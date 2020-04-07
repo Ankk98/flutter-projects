@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 
 class ChartBar extends StatelessWidget {
   final String label;
@@ -9,52 +10,59 @@ class ChartBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Flexible(
-      fit: FlexFit.tight,
-      child: Container(
-        child: Column(
-          children: <Widget>[
-            Container(
-              height: 20,
-              child: FittedBox(
-                child: Text(label),
+    return LayoutBuilder(
+      builder: (ctx, constraints) {
+        return Container(
+          child: Column(
+            children: <Widget>[
+              Container(
+                height: constraints.maxHeight * 0.15,
+                child: FittedBox(
+                  child: Text(label),
+                ),
               ),
-            ),
-            Container(
-              height: 60,
-              width: 10,
-              child: Stack(
-                children: <Widget>[
-                  Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey, width: 1.0),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  ),
-                  FractionallySizedBox(
-                    child: Container(
+              SizedBox(
+                height: constraints.maxHeight * 0.05,
+              ),
+              Container(
+                height: constraints.maxHeight * 0.6,
+                width: 10,
+                child: Stack(
+                  children: <Widget>[
+                    Container(
                       decoration: BoxDecoration(
-                        color: Theme.of(context).primaryColor,
+                        border: Border.all(color: Colors.grey, width: 1.0),
                         borderRadius: BorderRadius.circular(10),
                       ),
                     ),
-                    heightFactor: percentage,
-                  ),
-                ],
+                    FractionallySizedBox(
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).primaryColor,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                      heightFactor: percentage,
+                    ),
+                  ],
+                ),
               ),
-            ),
-            SizedBox(
-              height: 4,
-            ),
-            Container(
-              height: 20,
-              child: FittedBox(
-                child: Text(amount.toString()),
+              SizedBox(
+                height: constraints.maxHeight * 0.05,
               ),
-            ),
-          ],
-        ),
-      ),
+              Container(
+                height: constraints.maxHeight * 0.15,
+                child: FittedBox(
+                  child: Text(amount.toString()),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 }
+
+
+// fit: FlexFit.tight,
