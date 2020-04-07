@@ -14,16 +14,16 @@ class TransactionList extends StatelessWidget {
       child: transactions.length < 1
           ? Column(
               children: <Widget>[
-                Text('Add a new Transaction'),
-                SizedBox(
+                const Text('Add a new Transaction'),
+                const SizedBox(
                   height: 20,
                 ),
                 Container(
                   child: Image.asset(
                     'assets/images/welcome2.png',
-                    fit: BoxFit.cover,
+                    fit: BoxFit.scaleDown,
                   ),
-                  height: 200,
+                  height: MediaQuery.of(context).size.height * 0.5,
                 ),
               ],
             )
@@ -31,7 +31,7 @@ class TransactionList extends StatelessWidget {
               itemCount: transactions.length,
               itemBuilder: (BuildContext context, int index) {
                 return Card(
-                  margin: EdgeInsets.symmetric(
+                  margin: const EdgeInsets.symmetric(
                     horizontal: 5,
                     vertical: 8,
                   ),

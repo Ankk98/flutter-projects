@@ -44,7 +44,7 @@ class Chart extends StatelessWidget {
 
     return Card(
       child: Padding(
-        padding: EdgeInsets.all(10),
+        padding: const EdgeInsets.all(10),
         child: Row(
           children: groupedTransactionValues.map((data){
             double percentage;
@@ -62,7 +62,7 @@ class Chart extends StatelessWidget {
         ),
       ),
       color: Theme.of(context).cardColor,
-      margin: EdgeInsets.all(20),
+      margin: const EdgeInsets.all(20),
       elevation: 6,
     );
   }
